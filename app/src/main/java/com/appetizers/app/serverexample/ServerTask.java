@@ -14,10 +14,10 @@ import java.net.Socket;
 
 //Class for server interaction
 public class ServerTask extends AsyncTask<Void,String,Void> {
-    String ip;
-    int port;
-    MainActivity activity; //Save activity as var in order to update it later
-    Socket socket;
+    private String ip;
+    private int port;
+    private MainActivity activity; //Save activity as var in order to update it later
+    private Socket socket;
 
     public ServerTask(String ip, int port, MainActivity activity) {
         Log.i("Task", "Made ServerTask");
@@ -45,15 +45,15 @@ public class ServerTask extends AsyncTask<Void,String,Void> {
     protected Void doInBackground(Void... voids) {
         try {
             Log.i("Task", "In bg task");
-            socket = new Socket(ip,port);
+            socket = new Socket(ip,port); //Create the socket
             Log.i("Task", "Made socket");
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));//Reads messages from server through socket
-            String line = reader.readLine();
-            while(line!=null && !line.equals("Bye")){
-                publishProgress(line);//Update activity in order to change it
-                line = reader.readLine();
+            String line = reader.readLine(); //Get the first message from the server
+            while(line!=null && !line.equals("Bye")){ //While the server hasn't shut down or sent a Bye message
+                publishProgress(line); //Update activity in order to change it
+                line = reader.readLine(); //Get the next line from the server
             }
-            socket.close();
+            socket.close(); //Close the socket once the process is done
         } catch (IOException e) {
             e.printStackTrace();
             Log.i("Task", e.getMessage());
@@ -71,7 +71,7 @@ public class ServerTask extends AsyncTask<Void,String,Void> {
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
         if(!values[0].equals(""))
-            activity.useData(values[0]);
+            activity.useData(values[0]); //Send data to activity if it's not empty
 
     }
 }

@@ -54,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
         container = findViewById(R.id.containerLayout);
 
         Log.d("Debug", "About to make servertask");
-        ServerTask task = new ServerTask("10.0.0.21",12345, this);
+        ServerTask task = new ServerTask("10.0.0.21",12345, this); //Create the ServerTask
         Log.d("Debug", "Made servertask");
-        task.execute();
+        task.execute(); //Start the ServerTask
         Log.d("Debug", "Executed servertask");
     }
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Make sure we don't try to work with wrong type of server message, resulting in a crash
         if(line.startsWith("Android")){
-            String[] strs = line.split("&&");
+            String[] strs = line.split("&&"); //Split the message into smaller chunks
 
             //Start with 1 because 0 should be "Android". Sets the correct text values for each TextView
             nameText.setText(strs[1].substring(0, 1).toUpperCase() + strs[1].substring(1));
