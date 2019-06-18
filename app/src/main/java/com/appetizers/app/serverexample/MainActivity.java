@@ -1,6 +1,8 @@
 package com.appetizers.app.serverexample;
 
+import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
 
     LinearLayout layout;
     LinearLayout container;
+
+    /**
+     * Both of these are for the server connection process
+     */
+    EditText input;
+    String ip;
 
     private TextView nameText;
     private TextView HPText;
@@ -49,12 +57,43 @@ public class MainActivity extends AppCompatActivity {
         flyingText = findViewById(R.id.flyingText);
         pokeImage = findViewById(R.id.pokeImage);
 
-        //Set layouts in order to change background and visibilitylater
+        //Set layouts in order to change background and visibility later
         layout = findViewById(R.id.layout);
         container = findViewById(R.id.containerLayout);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pokemon Heroes");
+        builder.setIcon(R.drawable.hpicon);
+        builder.setMessage("Please enter the IP address of the server");
+
+        input = new EditText(this);
+        builder.setView(input);
+
+        //Set Positive Button
+        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ip = input.getText().toString();
+                makeServerTask();
+            }
+        });
+
+        //Set Negative Button
+        builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                System.exit(1);
+            }
+        });
+
+        AlertDialog ad = builder.create();
+        ad.show();
+
+    }
+
+    public void makeServerTask(){
         Log.d("Debug", "About to make servertask");
-        ServerTask task = new ServerTask("10.0.0.21",12345, this); //Create the ServerTask
+        ServerTask task = new ServerTask(ip, 12345, this); //Create the ServerTask
         Log.d("Debug", "Made servertask");
         task.execute(); //Start the ServerTask
         Log.d("Debug", "Executed servertask");
